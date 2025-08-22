@@ -91,7 +91,7 @@ def grade_and_filter_documents(shared_state):
     filtered_documents = []
     
     for document in documents:
-        grader_response = retrieval_grader.invoke("question": question, "document": document)
+        grader_response = retrieval_grader.invoke({"question": question, "document": document})
         
         if grader_response.binary_score.lower() == "yes":
             print("---GRADE: Relevant ---")
@@ -199,3 +199,14 @@ def build_graph(shared_state):
     return workflow_graph.compile()
 
 
+
+load_dotenv()
+
+compiled_graph = build_graph()
+
+shared_state = compiled_graph.invoke({
+    'question': "What are the main components of a RAG system, and which tools are mentioned for the orchestration layer?"
+})
+
+print('\n Agent Response:\n')
+print(shared_state['agent_response'])
