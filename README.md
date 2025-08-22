@@ -12,7 +12,7 @@ C-RAG is an advanced Retrieval Augmented Generation workflow implemented in Pyth
 ---
 
 
-## Project Image
+## Workflow 
 
 ![C-RAG Workflow](media/workflow.png)
 
