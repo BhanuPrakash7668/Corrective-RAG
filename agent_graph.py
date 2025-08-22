@@ -55,7 +55,7 @@ def build_vector_store(shared_state):
         collection_name = "rag-chroma",
         embedding=OpenAIEmbeddings(),
     )
-    shared_state['vector_store'] = vector_store
+    shared_state['vector_store'] = vector_store.as_retriever()
     
     return shared_state
 
@@ -169,7 +169,7 @@ def perform_web_search(shared_state):
 
 
 
-def build_graph(shared_state):
+def build_graph():
     workflow_graph = StateGraph(SharedState)
     
     workflow_graph.add_node("get_model", get_model)
@@ -178,13 +178,13 @@ def build_graph(shared_state):
     workflow_graph.add_node("grade_and_filter_documents", grade_and_filter_documents)
     workflow_graph.add_node("generate_answer_from_documents", generate_answer_from_documents)
     workflow_graph.add_node("perform_web_search", perform_web_search)
-    wrokflow_graph.add_node("transform_query", transform_query)
+    workflow_graph.add_node("transform_query", transform_query)
     
     workflow_graph.add_edge(START, "get_model")
     workflow_graph.add_edge("get_model", "build_vector_store")
     workflow_graph.add_edge("build_vector_store", "get_relevant_documents")
     workflow_graph.add_edge("get_relevant_documents", "grade_and_filter_documents")
-    workflow_graph.add_condtional_edges("grade_and_filter_documents",
+    workflow_graph.add_conditional_edges("grade_and_filter_documents",
                                  decide_to_generate,
                                  {
                                      "transform_query": "transform_query",
@@ -205,7 +205,8 @@ load_dotenv()
 compiled_graph = build_graph()
 
 shared_state = compiled_graph.invoke({
-    'question': "What are the main components of a RAG system, and which tools are mentioned for the orchestration layer?"
+    #'question': "What are the main components of a RAG system, and which tools are mentioned for the orchestration layer?"
+    'question': "What is DFS"
 })
 
 print('\n Agent Response:\n')
